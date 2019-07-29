@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: ngdesktopfile
+Bundle-Name: NGDesktop File
+Bundle-Version: 1.0.0
+Package-Type: Web-Service
+
+Name: ngdesktopfile/ngdesktopfile.spec
+Web-Service: True
+
