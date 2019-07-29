@@ -1,0 +1,2 @@
+# ngdesktopfile
+NGDesktop File plugin
