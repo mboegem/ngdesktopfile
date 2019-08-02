@@ -126,7 +126,7 @@ angular.module('ngdesktopfile',['servoy'])
 						path: path,
 						file: fs.createReadStream(path)
 					};
-					request.post({url:getFullUrl($utils.generateUploadUrl("svy_services", "ngdesktopfile", "callback")), formData: formData},
+					request.post({url:getFullUrl($utils.generateServiceUploadUrl("ngdesktopfile", "callback")), formData: formData},
 						function optionalCallback(err, httpResponse, body) {
 							  if (err) {
 							    return console.error('upload failed:', err);
