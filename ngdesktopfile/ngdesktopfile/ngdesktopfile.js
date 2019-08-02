@@ -1,12 +1,46 @@
 angular.module('ngdesktopfile',['servoy'])
-.factory("ngdesktopfile",function($services, $q, $window) 
+.factory("ngdesktopfile",function($services, $q, $window,$utils) 
 {
 	var fs = null;
+	var request = null;
+	var session = null;
 	if (typeof require == "function") {
 		fs = require('fs');
+		request = require('request');
+		session= require('electron').remote.session;
+		
+		var j = request.jar();
+		request = request.defaults({jar:j});
+		// Query all cookies.
+		session.defaultSession.cookies.get({})
+		  .then(function(cookies) {
+		    cookies.forEach(function(cookie) {
+		    	var ck = request.cookie(cookie.name + '=' + cookie.value);
+		    	j.setCookie(ck, document.baseURI);
+		    });
+		  }).catch(function(error){
+		    console.log(error)
+		  })
 	}
 	if (fs) {
+		function getFullUrl(url) {
+			var base = document.baseURI;
+			if (!base.endsWith("/")) base = base + "/";
+			return base + url;
+		}
+		var defer = null;
+		function waitForDefered(func) {
+			if (defer != null) {
+				defer.promise.then(function(){
+					func();
+				})
+			}
+			else func();
+		}
 		return {
+			waitForDefered: function(func) {
+				waitForDefered(func);
+			},
 			/**
 			 * Returns the home dir of the user like c:/users/[username] under windows.
 			 * Will return always a both with forward slashes.
@@ -27,9 +61,10 @@ angular.module('ngdesktopfile',['servoy'])
 			 */
 			listDir: function(path) {
 				const defer = $q.defer();
-				fs.readdir(path, function(error, files) {
-					console.log(files);
-					 defer.resolve(files);
+				waitForDefered(function() {
+					fs.readdir(path, function(error, files) {
+						 defer.resolve(files);
+					})
 				})
 				return defer.promise;
 			},
@@ -38,10 +73,12 @@ angular.module('ngdesktopfile',['servoy'])
 			 * Please use forward slashes (/) instead of backward slashes in the path/filename
 			 */
 			watchFile: function(path, callback) {
-				fs.watchFile(path, function(curr, prev) {
-					  if (curr.mtime != prev.mtime)
-					  	$window.executeInlineScript(callback.formname, callback.script, [path]);
-				});
+				waitForDefered(function() {
+					fs.watchFile(path, function(curr, prev) {
+						  if (curr.mtime != prev.mtime)
+						  	$window.executeInlineScript(callback.formname, callback.script, [path]);
+					});
+				})
 			},
 			/**
 			 * Removes the watch to the file that was added by the watchFile() function.
@@ -59,26 +96,45 @@ angular.module('ngdesktopfile',['servoy'])
 				// empty impl, is implemented in server side api calling the impl method below.
 			},
 			writeFileImpl: function(path, url) {
-				var r = new XMLHttpRequest();
-				r.open("GET", url, true);
-				r.responseType='arraybuffer';
-				r.onload = function(e){
-				    var data= Buffer.from(r.response);
-				    
+				waitForDefered(function() {
+					defer = $q.defer();
 				    var dir = path;
 				    var index = path.lastIndexOf("/");
 				    if (index > 0) {
 				    	dir = path.substring(0,index);
 				    }
 				    fs.mkdir(dir, { recursive: true }, function(err) {
-				    	  if (err) throw err;
-						    fs.writeFile(path, data, function(err) {
-						    	if (err) throw err;
-						    });
-				    	});
-				}
-				r.send();
+				    	if (err) throw err;
+						const pipe = request(getFullUrl(url)).pipe(fs.createWriteStream(path));
+						pipe.on("close", function() {
+							defer.resolve(true);
+							defer = null;
+						});
+					});
+				})
+			},
+			/**
+			 * Reads the given bytes of a path, the callback is a function that will get as paremeters the 'path' and the 'file'.
+			 * Please use forward slashes (/) instead of backward slashes in the path/filename
+			 */
+			readFile: function(path, callback) {
+				// empty impl, is implemented in server side api calling the impl method below.
+			},
+			readFileImpl: function(path) {
+				waitForDefered(function() {
+					var formData = {
+						path: path,
+						file: fs.createReadStream(path)
+					};
+					request.post({url:getFullUrl($utils.generateUploadUrl("svy_services", "ngdesktopfile", "callback")), formData: formData},
+						function optionalCallback(err, httpResponse, body) {
+							  if (err) {
+							    return console.error('upload failed:', err);
+							  }
+					});
+				})
 			}
+
 		}
 	}
 	else {
@@ -87,8 +143,8 @@ angular.module('ngdesktopfile',['servoy'])
 			listDir: function(path) {console.log("not in electron");},
 			watchFile: function(path, callback) {console.log("not in electron");},
 			unwatchFile: function(path) {console.log("not in electron");},
-			writeFileImpl: function(path, bytes){console.log("not in electron");}
-			
+			writeFileImpl: function(path, bytes){console.log("not in electron");},
+			readFileImpl: function(path, bytes){console.log("not in electron");}
 		}
 	}
 })

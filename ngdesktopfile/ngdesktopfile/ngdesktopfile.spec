@@ -34,6 +34,12 @@
 				{"name":"path", "type":"string"},
 				{"name":"bytes", "type":"byte[]"}
 			]
+		},
+		"readFile": {
+			"parameters" : [
+				{"name":"path", "type":"string"},
+				{"name":"callback", "type":"function"}
+			]
 		}
  	},
  	"internalApi": {
@@ -41,6 +47,17 @@
 			"parameters" : [
 				{"name":"path", "type":"string"},
 				{"name":"url", "type":"string"}
+			]
+		},
+		"readFileImpl": {
+			"parameters" : [
+				{"name":"path", "type":"string"}
+			]
+		},
+		"callback": {
+			"parameters" : [
+				{"name":"file", "type":"object"},
+				{"name":"fields", "type":"object"}
 			]
 		}
  	}
