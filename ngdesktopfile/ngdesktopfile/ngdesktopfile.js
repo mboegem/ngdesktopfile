@@ -114,8 +114,9 @@ angular.module('ngdesktopfile',['servoy'])
 				})
 			},
 			/**
-			 * Reads the given bytes of a path, the callback is a function that will get as paremeters the 'path' and the 'file'.
+			 * Reads the given bytes of a path, the callback is a function that will get as paremeters the 'path' as a String and the 'file' as a JSUpload object
 			 * Please use forward slashes (/) instead of backward slashes in the path/filename
+			 * 
 			 */
 			readFile: function(path, callback) {
 				// empty impl, is implemented in server side api calling the impl method below.

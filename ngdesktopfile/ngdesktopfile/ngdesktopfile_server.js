@@ -13,6 +13,6 @@ $scope.api.readFile = function(path,callback)
 
 $scope.api.callback = function(file, fields) {
 	var callback = pathToCallback[fields.path];
-	if (callback) callback(fields.path, file);
+	if (callback) callback(fields.path, file, fields);
 	pathToCallback[fields.path] = null;
 }
