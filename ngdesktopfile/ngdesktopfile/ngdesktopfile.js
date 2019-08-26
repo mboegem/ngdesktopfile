@@ -134,6 +134,15 @@ angular.module('ngdesktopfile',['servoy'])
 							  }
 					});
 				})
+			},
+			deleteFile: function(path) {
+				const defer = $q.defer();
+				waitForDefered(function() {
+					fs.unlink(path, function(err) {
+						if (err) throw err;
+					});
+				})
+				return defer.promise;
 			}
 
 		}

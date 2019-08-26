@@ -40,8 +40,13 @@
 				{"name":"path", "type":"string"},
 				{"name":"callback", "type":"function"}
 			]
-		}
- 	},
+		},
+		"deleteFile": {
+		 	"parameters": [
+		 		{"name":"path", "type":"string"}
+		 	]
+		 }
+	},
  	"internalApi": {
  		"writeFileImpl": {
 			"parameters" : [
