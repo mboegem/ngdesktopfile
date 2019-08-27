@@ -11,8 +11,9 @@ $scope.api.readFile = function(path,callback)
 	$scope.api.readFileImpl(path);
 }
 
-$scope.api.callback = function(file, fields) {
-	var callback = pathToCallback[fields.path];
-	if (callback) callback(fields.path, file, fields);
-	pathToCallback[fields.path] = null;
+$scope.api.callback = function(file) {
+	var path = file.getFieldValue("path");
+	var callback = pathToCallback[path];
+	if (callback) callback(path, file);
+	pathToCallback[path] = null;
 }
