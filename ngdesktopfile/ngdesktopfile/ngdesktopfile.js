@@ -135,16 +135,13 @@ angular.module('ngdesktopfile',['servoy'])
 					});
 				})
 			},
-			deleteFile: function(path) {
-				const defer = $q.defer();
+			deleteFile: function(path, errorCallback) {
 				waitForDefered(function() {
 					fs.unlink(path, function(err) {
-						if (err) throw err;
+						if (err && errorCallback) $window.executeInlineScript(errorCallback.formname, errorCallback.script, [err]);
 					});
 				})
-				return defer.promise;
 			}
-
 		}
 	}
 	else {
@@ -154,7 +151,8 @@ angular.module('ngdesktopfile',['servoy'])
 			watchFile: function(path, callback) {console.log("not in electron");},
 			unwatchFile: function(path) {console.log("not in electron");},
 			writeFileImpl: function(path, bytes){console.log("not in electron");},
-			readFileImpl: function(path, bytes){console.log("not in electron");}
+			readFileImpl: function(path, bytes){console.log("not in electron");},
+			deleteFile: function(path, errorCallback){console.log("not in electron");}
 		}
 	}
 })

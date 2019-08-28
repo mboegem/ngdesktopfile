@@ -47,7 +47,8 @@
 		},
 		"deleteFile": {
 		 	"parameters": [
-		 		{"name":"path", "type":"string"}
+		 		{"name":"path", "type":"string"},
+		 		{"name":"errorCallback", "type":"function", "optional": true}
 		 	],
 		 	"async-now":true
 		 }
