@@ -104,12 +104,23 @@ angular.module('ngdesktopfile',['servoy'])
 				    	dir = path.substring(0,index);
 				    }
 				    fs.mkdir(dir, { recursive: true }, function(err) {
-				    	if (err) throw err;
-						const pipe = request(getFullUrl(url)).pipe(fs.createWriteStream(path));
-						pipe.on("close", function() {
-							defer.resolve(true);
+				    	if (err) {
+				    		defer.resolve(false);
 							defer = null;
-						});
+							throw err;
+				    	}
+				    	else {
+							const pipe = request(getFullUrl(url)).pipe(fs.createWriteStream(path));
+							pipe.on("error", function(err) {
+								defer.resolve(false);
+								defer = null;
+								throw err;
+							});
+							pipe.on("close", function() {
+								defer.resolve(true);
+								defer = null;
+							});
+				    	}
 					});
 				})
 			},
