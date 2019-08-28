@@ -22,29 +22,34 @@
 			"parameters" : [
 				{"name":"path", "type":"string"},
 				{"name":"callback", "type":"function"}
-			]
+			],
+			"async-now":true
 		},
 		"unwatchFile": {
 			"parameters" : [
 				{"name":"path", "type":"string"}
-			]
+			],
+			"async-now":true
 		},
 		"writeFile": {
 			"parameters" : [
 				{"name":"path", "type":"string"},
 				{"name":"bytes", "type":"byte[]"}
-			]
+			],
+			"async-now":true
 		},
 		"readFile": {
 			"parameters" : [
 				{"name":"path", "type":"string"},
 				{"name":"callback", "type":"function"}
-			]
+			],
+			"async-now":true
 		},
 		"deleteFile": {
 		 	"parameters": [
 		 		{"name":"path", "type":"string"}
-		 	]
+		 	],
+		 	"async-now":true
 		 }
 	},
  	"internalApi": {
@@ -52,12 +57,14 @@
 			"parameters" : [
 				{"name":"path", "type":"string"},
 				{"name":"url", "type":"string"}
-			]
+			],
+			"async-now":true
 		},
 		"readFileImpl": {
 			"parameters" : [
 				{"name":"path", "type":"string"}
-			]
+			],
+			"async-now":true
 		},
 		"callback": {
 			"parameters" : [
