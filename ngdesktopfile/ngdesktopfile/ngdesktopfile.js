@@ -4,15 +4,20 @@ angular.module('ngdesktopfile',['servoy'])
 	var fs = null;
 	var request = null;
 	var session = null;
+	var dialog = null;
+	var remote = null;
+	
 	if (typeof require == "function") {
 		fs = require('fs');
 		request = require('request');
-		session= require('electron').remote.session;
+		remote = require('electron').remote;
+		session = remote.session;
+		dialog = remote.dialog;
 		
 		var j = request.jar();
 		request = request.defaults({jar:j});
 		// Query all cookies.
-		session.defaultSession.cookies.get({})
+		session.defaultSession.cookies.get({url:remote.getCurrentWebContents().getURL()})
 		  .then(function(cookies) {
 		    cookies.forEach(function(cookie) {
 		    	var ck = request.cookie(cookie.name + '=' + cookie.value);
@@ -23,6 +28,16 @@ angular.module('ngdesktopfile',['servoy'])
 		  })
 	}
 	if (fs) {
+		function getOptions(path)
+		{
+		    var options = {
+		    	 title: "Save file",
+		    	 defaultPath : path,
+		    	 buttonLabel : "Save"
+		    	}
+
+		    return options;
+		}
 		function getFullUrl(url) {
 			var base = document.baseURI;
 			if (!base.endsWith("/")) base = base + "/";
@@ -97,31 +112,49 @@ angular.module('ngdesktopfile',['servoy'])
 			},
 			writeFileImpl: function(path, url) {
 				waitForDefered(function() {
+					function saveUrlToPath(dir, realPath) {
+					    fs.mkdir(dir, { recursive: true }, function(err) {
+					    	if (err) {
+					    		defer.resolve(false);
+								defer = null;
+								throw err;
+					    	}
+					    	else {
+								const pipe = request(getFullUrl(url)).pipe(fs.createWriteStream(realPath));
+								pipe.on("error", function(err) {
+									defer.resolve(false);
+									defer = null;
+									throw err;
+								});
+								pipe.on("close", function() {
+									defer.resolve(true);
+									defer = null;
+								});
+					    	}
+						});
+					}
 					defer = $q.defer();
 				    var dir = path;
 				    var index = path.lastIndexOf("/");
 				    if (index > 0) {
 				    	dir = path.substring(0,index);
+				    	saveUrlToPath(dir, path);
+				    } else {
+				    	var options = getOptions(path);
+				    	dialog.showSaveDialog(remote.getCurrentWindow(), options)
+						.then(function(result) {
+				    		 if (!result.canceled) {
+				    			 var realPath = result.filePath.replace(/\\/g, "/"); //on Windows the path contains backslash
+					    		 var index = realPath.lastIndexOf("/");
+								 if (index > 0) {
+								 	dir = realPath.substring(0,index);
+								    saveUrlToPath(dir,realPath);
+								 }
+				    		 }
+				    	}).catch(function(err) {
+				    		 console.log(err)
+				    	});
 				    }
-				    fs.mkdir(dir, { recursive: true }, function(err) {
-				    	if (err) {
-				    		defer.resolve(false);
-							defer = null;
-							throw err;
-				    	}
-				    	else {
-							const pipe = request(getFullUrl(url)).pipe(fs.createWriteStream(path));
-							pipe.on("error", function(err) {
-								defer.resolve(false);
-								defer = null;
-								throw err;
-							});
-							pipe.on("close", function() {
-								defer.resolve(true);
-								defer = null;
-							});
-				    	}
-					});
 				})
 			},
 			/**
