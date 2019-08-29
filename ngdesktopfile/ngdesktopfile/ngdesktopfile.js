@@ -28,16 +28,6 @@ angular.module('ngdesktopfile',['servoy'])
 		  })
 	}
 	if (fs) {
-		function getOptions(path)
-		{
-		    var options = {
-		    	 title: "Save file",
-		    	 defaultPath : path,
-		    	 buttonLabel : "Save"
-		    	}
-
-		    return options;
-		}
 		function getFullUrl(url) {
 			var base = document.baseURI;
 			if (!base.endsWith("/")) base = base + "/";
@@ -140,7 +130,11 @@ angular.module('ngdesktopfile',['servoy'])
 				    	dir = path.substring(0,index);
 				    	saveUrlToPath(dir, path);
 				    } else {
-				    	var options = getOptions(path);
+				    	var options = {
+			                title: "Save file",
+			                defaultPath : path,
+			                buttonLabel : "Save"
+			               }
 				    	dialog.showSaveDialog(remote.getCurrentWindow(), options)
 						.then(function(result) {
 				    		 if (!result.canceled) {
