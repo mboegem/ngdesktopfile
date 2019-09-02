@@ -40,7 +40,7 @@
 		},
 		"readFile": {
 			"parameters" : [
-				{"name":"path", "type":"string"},
+				{"name":"path", "type":"string", "optional": true},
 				{"name":"callback", "type":"function"}
 			],
 			"async-now":true
@@ -63,7 +63,8 @@
 		},
 		"readFileImpl": {
 			"parameters" : [
-				{"name":"path", "type":"string"}
+				{"name":"path", "type":"string"},
+				{"name":"key", "type":"string"}
 			],
 			"async-now":true
 		},

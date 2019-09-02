@@ -94,7 +94,8 @@ angular.module('ngdesktopfile',['servoy'])
 			},
 			/**
 			 * Writes the given bytes to the path, if the path has sub directories that are not there 
-			 * then those are made.
+			 * then those are made. If the path is missing or contain only the file name then the  
+			 * native system dialog for saving files it is called.
 			 * Please use forward slashes (/) instead of backward slashes in the path/filename
 			 */
 			writeFile: function(path, bytes) {
@@ -124,9 +125,10 @@ angular.module('ngdesktopfile',['servoy'])
 						});
 					}
 					defer = $q.defer();
+					path = path != null ? path : "";
 				    var dir = path;
 				    var index = path.lastIndexOf("/");
-				    if (index > 0) {
+				    if (index >= 0) {
 				    	dir = path.substring(0,index);
 				    	saveUrlToPath(dir, path);
 				    } else {
@@ -152,25 +154,48 @@ angular.module('ngdesktopfile',['servoy'])
 				})
 			},
 			/**
-			 * Reads the given bytes of a path, the callback is a function that will get as paremeters the 'path' as a String and the 'file' as a JSUpload object
+			 * Reads the given bytes of a path, the callback is a function that will get as parameters the 'path' as a String and the 'file' as a JSUpload object
+			 * If the path is missing or contain only the file name then the native system dialog for opening files it is called.
 			 * Please use forward slashes (/) instead of backward slashes in the path/filename
 			 * 
 			 */
 			readFile: function(path, callback) {
 				// empty impl, is implemented in server side api calling the impl method below.
 			},
-			readFileImpl: function(path) {
+			readFileImpl: function(path, id) {
 				waitForDefered(function() {
-					var formData = {
-						path: path,
-						file: fs.createReadStream(path)
-					};
-					request.post({url:getFullUrl($utils.generateServiceUploadUrl("ngdesktopfile", "callback")), formData: formData},
-						function optionalCallback(err, httpResponse, body) {
-							  if (err) {
-							    return console.error('upload failed:', err);
-							  }
-					});
+					function readUrlFromPath(path, id) {
+						var formData = {
+							path: path,
+							id: id,
+							file: fs.createReadStream(path)
+						};
+						request.post({url:getFullUrl($utils.generateServiceUploadUrl("ngdesktopfile", "callback")), formData: formData},
+							function optionalCallback(err, httpResponse, body) {
+								  if (err) {
+								    return console.error('upload failed:', err);
+								  }
+						});
+					}
+					
+					path = path != null ? path : "";
+					if (path.lastIndexOf("/") >= 0) {
+						readUrlFromPath(path, id)
+					} else {
+						var options = {
+			                title: "Open file",
+			                defaultPath : path,
+			                buttonLabel : "Open"
+			            }
+						dialog.showOpenDialog(remote.getCurrentWindow(), options)
+						.then(function(result) {
+							if (!result.canceled) {
+								readUrlFromPath(result.filePaths[0].replace(/\\/g, "/"), id); //on Windows the path contains backslash
+							}
+						}).catch(function(err) {
+							console.log(err);
+						})
+					}					
 				})
 			},
 			deleteFile: function(path, errorCallback) {
@@ -189,7 +214,7 @@ angular.module('ngdesktopfile',['servoy'])
 			watchFile: function(path, callback) {console.log("not in electron");},
 			unwatchFile: function(path) {console.log("not in electron");},
 			writeFileImpl: function(path, bytes){console.log("not in electron");},
-			readFileImpl: function(path, bytes){console.log("not in electron");},
+			readFileImpl: function(path, id, bytes){console.log("not in electron");},
 			deleteFile: function(path, errorCallback){console.log("not in electron");}
 		}
 	}
