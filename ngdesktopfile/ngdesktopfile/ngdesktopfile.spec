@@ -51,6 +51,12 @@
 		 		{"name":"errorCallback", "type":"function", "optional": true}
 		 	],
 		 	"async-now":true
+		},
+		 "getFileStats": {
+		 	"parameters": [
+		 		{"name":"path", "type":"string"}
+		 	],
+		 	"returns": "stats"
 		 }
 	},
  	"internalApi": {
@@ -74,5 +80,34 @@
 				{"name":"fields", "type":"object"}
 			]
 		}
- 	}
+ 	},
+ 	"types": {
+		"stats": {
+			"isBlockDevice": {"type": "boolean", "default": false},
+			"isCharacterkDevice": {"type": "boolean", "default": false},
+			"isDirectory": { "type": "boolean", "default": false},
+			"isFIFO": { "type": "boolean", "default": false},
+			"isFile": { "type": "boolean", "default": false},
+			"isSocket": { "type": "boolean", "default": false},
+			"isSymbolicLink": { "type": "boolean", "default": false},
+			"dev": { "type": "long", "default": 0},
+			"ino": { "type": "long"},
+			"mode": { "type": "long"},
+			"nlink": { "type": "long"}, 
+			"uid": { "type": "long"},
+			"gid": { "type": "long"},
+			"rdev": { "type": "long"},
+			"size": { "type": "long"},
+			"blksize": { "type": "long"},
+			"blocks": { "type": "long"},
+			"atimeMs": { "type": "long"},
+			"mtimeMs": { "type": "long"},
+			"ctimeMs": { "type": "long"},
+			"birthtimeMs": { "type": "long"},
+			"atime": { "type": "date"},
+			"mtime": { "type": "date"},
+			"ctime": { "type": "date"}, 
+			"birthtime": { "type": "date" }
+		}
+	}
 }

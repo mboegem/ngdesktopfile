@@ -204,6 +204,23 @@ angular.module('ngdesktopfile',['servoy'])
 						if (err && errorCallback) $window.executeInlineScript(errorCallback.formname, errorCallback.script, [err]);
 					});
 				})
+			},
+			/**
+			 * Return a 'stats' object containing related file's information's.
+			 * Please use forward slashes (/) instead of backward slashes in the path
+			 * 
+			 */
+			getFileStats: function(path) {
+				try {
+					var fsStats = fs.statSync(path);
+						if (fsStats.isSymbolicLink()) {
+							fsStats = fs.lStatSync(path);
+							}
+							return fsStats;
+					}
+				catch(err) {
+					console.log(err);
+				}
 			}
 		}
 	}
