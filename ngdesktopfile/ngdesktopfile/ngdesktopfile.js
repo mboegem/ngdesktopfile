@@ -213,11 +213,34 @@ angular.module('ngdesktopfile',['servoy'])
 			getFileStats: function(path) {
 				try {
 					var fsStats = fs.statSync(path);
-						if (fsStats.isSymbolicLink()) {
-							fsStats = fs.lStatSync(path);
-							}
-							return fsStats;
+					if (fsStats.isSymbolicLink()) {
+						fsStats = fs.lStatSync(path);
 					}
+					var retStats = {
+						"isBlockDevice": fsStats.isBlockDevice(),
+						"isCharacterkDevice": fsStats.isCharacterDevice(),
+						"isDirectory": fsStats.isDirectory(),
+						"isFIFO": fsStats.isFIFO(),
+						"isFile": fsStats.isFile(),
+						"isSocket": fsStats.isSocket(),
+						"isSymbolicLink": fsStats.isSymbolicLink(),
+						"dev": fsStats.dev,
+						"ino": fsStats.ino,
+						"mode": fsStats.mode,
+						"nlink": fsStats.nlink,
+						"uid": fsStats.uid,
+						"gid": fsStats.gid,
+						"rdev": fsStats.rdev,
+						"size": fsStats.size,
+						"blksize": fsStats.blksize,
+						"blocks": fsStats.blocks,
+						"atimeMs": fsStats.atimeMs,
+						"mtimeMs": fsStats.mtimeMs,
+						"ctimeMs": fsStats.ctimeMs,
+						"birthtimeMs": fsStats.birthtimeMs
+					};
+					return retStats;
+				}
 				catch(err) {
 					console.log(err);
 				}

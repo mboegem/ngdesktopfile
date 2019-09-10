@@ -90,7 +90,7 @@
 			"isFile": { "type": "boolean", "default": false},
 			"isSocket": { "type": "boolean", "default": false},
 			"isSymbolicLink": { "type": "boolean", "default": false},
-			"dev": { "type": "long", "default": 0},
+			"dev": { "type": "long"},
 			"ino": { "type": "long"},
 			"mode": { "type": "long"},
 			"nlink": { "type": "long"}, 
@@ -103,11 +103,7 @@
 			"atimeMs": { "type": "long"},
 			"mtimeMs": { "type": "long"},
 			"ctimeMs": { "type": "long"},
-			"birthtimeMs": { "type": "long"},
-			"atime": { "type": "date"},
-			"mtime": { "type": "date"},
-			"ctime": { "type": "date"}, 
-			"birthtime": { "type": "date" }
+			"birthtimeMs": { "type": "long"}
 		}
 	}
 }
