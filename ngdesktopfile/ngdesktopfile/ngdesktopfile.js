@@ -209,6 +209,7 @@ angular.module('ngdesktopfile',['servoy'])
 			 * Return a 'stats' object containing related file's information's.
 			 * Please use forward slashes (/) instead of backward slashes in the path
 			 * 
+			 * @return {stats}
 			 */
 			getFileStats: function(path) {
 				try {
