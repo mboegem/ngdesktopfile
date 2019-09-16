@@ -40,8 +40,8 @@
 		},
 		"readFile": {
 			"parameters" : [
-				{"name":"path", "type":"string", "optional": true},
-				{"name":"callback", "type":"function"}
+				{"name":"callback", "type":"function"},
+				{"name":"path", "type":"string", "optional": true}
 			],
 			"async-now":true
 		},

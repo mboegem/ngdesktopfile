@@ -159,7 +159,7 @@ angular.module('ngdesktopfile',['servoy'])
 			 * Please use forward slashes (/) instead of backward slashes in the path/filename
 			 * 
 			 */
-			readFile: function(path, callback) {
+			readFile: function(callback, path) {
 				// empty impl, is implemented in server side api calling the impl method below.
 			},
 			readFileImpl: function(path, id) {
