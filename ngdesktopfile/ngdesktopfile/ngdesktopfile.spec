@@ -76,15 +76,14 @@
 		},
 		"callback": {
 			"parameters" : [
-				{"name":"file", "type":"object"},
-				{"name":"fields", "type":"object"}
+				{"name":"file", "type":"object"}
 			]
 		}
  	},
  	"types": {
 		"stats": {
 			"isBlockDevice": {"type": "boolean", "default": false},
-			"isCharacterkDevice": {"type": "boolean", "default": false},
+			"isCharacterDevice": {"type": "boolean", "default": false},
 			"isDirectory": { "type": "boolean", "default": false},
 			"isFIFO": { "type": "boolean", "default": false},
 			"isFile": { "type": "boolean", "default": false},

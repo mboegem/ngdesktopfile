@@ -125,7 +125,7 @@ angular.module('ngdesktopfile',['servoy'])
 						});
 					}
 					defer = $q.defer();
-					path = path != null ? path : "";
+					path = (path != null) ? path : "";
 				    var dir = path;
 				    var index = path.lastIndexOf("/");
 				    if (index >= 0) {
@@ -145,10 +145,18 @@ angular.module('ngdesktopfile',['servoy'])
 								 if (index > 0) {
 								 	dir = realPath.substring(0,index);
 								    saveUrlToPath(dir,realPath);
+								 } else {
+									defer.resolve(false);
+									defer = null;
 								 }
+				    		 } else {
+				    			defer.resolve(true);
+								defer = null;
 				    		 }
 				    	}).catch(function(err) {
-				    		 console.log(err)
+				    		console.log(err);
+				    		defer.resolve(false);
+							defer = null;
 				    	});
 				    }
 				})
@@ -178,7 +186,7 @@ angular.module('ngdesktopfile',['servoy'])
 						});
 					}
 					
-					path = path != null ? path : "";
+					path = (path != null) ? path : "";
 					if (path.lastIndexOf("/") >= 0) {
 						readUrlFromPath(path, id)
 					} else {
@@ -191,7 +199,7 @@ angular.module('ngdesktopfile',['servoy'])
 						.then(function(result) {
 							if (!result.canceled) {
 								readUrlFromPath(result.filePaths[0].replace(/\\/g, "/"), id); //on Windows the path contains backslash
-							}
+							} 
 						}).catch(function(err) {
 							console.log(err);
 						})
@@ -219,7 +227,7 @@ angular.module('ngdesktopfile',['servoy'])
 					}
 					var retStats = {
 						"isBlockDevice": fsStats.isBlockDevice(),
-						"isCharacterkDevice": fsStats.isCharacterDevice(),
+						"isCharacterDevice": fsStats.isCharacterDevice(),
 						"isDirectory": fsStats.isDirectory(),
 						"isFIFO": fsStats.isFIFO(),
 						"isFile": fsStats.isFile(),

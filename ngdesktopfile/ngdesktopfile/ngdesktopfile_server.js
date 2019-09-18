@@ -23,5 +23,5 @@ $scope.api.callback = function(file) {
 	var key = file.getFieldValue("id");
 	var callback = pathToCallback[key];
 	if (callback) callback(path, file);
-	pathToCallback[path] = null;
+	pathToCallback[key] = null;
 }
