@@ -230,6 +230,26 @@ angular.module('ngdesktopfile',['servoy'])
 					}					
 				})
 			},
+			/**
+			 * Select a folder and pass its path to the callback.
+			 */
+			selectDirectory: function(callback) {
+				waitForDefered(function() {
+					var options = {
+							title: "Select folder",
+							buttonLabel : "Select",
+							properties: ['openDirectory']
+					}
+					dialog.showOpenDialog(remote.getCurrentWindow(), options)
+					.then(function(result) {
+						if (!result.canceled) {
+							$window.executeInlineScript(callback.formname, callback.script, [result.filePaths[0]])
+						} 
+					}).catch(function(err) {
+						console.log(err);
+					})
+				})
+			},
 			deleteFile: function(path, errorCallback) {
 				waitForDefered(function() {
 					fs.unlink(path, function(err) {
@@ -288,6 +308,7 @@ angular.module('ngdesktopfile',['servoy'])
 			unwatchFile: function(path) {console.log("not in electron");},
 			writeFileImpl: function(path, bytes){console.log("not in electron");},
 			readFileImpl: function(path, id, bytes){console.log("not in electron");},
+			selectDirectory: function(callback){console.log("not in electron");},
 			deleteFile: function(path, errorCallback){console.log("not in electron");}
 		}
 	}

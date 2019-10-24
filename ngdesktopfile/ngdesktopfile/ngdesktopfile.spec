@@ -64,6 +64,12 @@
 		 		{"name":"path", "type":"string"}
 		 	],
 		 	"returns": "stats"
+		 },
+		 "selectDirectory": {
+			"parameters" : [
+				{"name":"callback", "type":"function"}
+			],
+			"async-now":true
 		 }
 	},
  	"internalApi": {
