@@ -9,6 +9,7 @@ angular.module('ngdesktopfile',['servoy'])
 	
 	if (typeof require == "function") {
 		fs = require('fs');
+		chokidar = require('chokidar');
 		request = require('request');
 		remote = require('electron').remote;
 		session = remote.session;
@@ -72,6 +73,29 @@ angular.module('ngdesktopfile',['servoy'])
 					})
 				})
 				return defer.promise;
+			},
+			watchDir: function(path, callback) {
+				// Initialize watcher
+				const watcher = chokidar.watch(path, {
+				  ignoreInitial: true,
+				  alwaysStat: true
+				});
+				waitForDefered(function() {
+					watcher.on('add', function(path, stats) {
+						$window.executeInlineScript(callback.formname, callback.script, [path]);
+					}).on('addDir', function(path, stats) {
+						$window.executeInlineScript(callback.formname, callback.script, [path]);
+					}).on('change', function(path, stats) {
+						// For MacOS: Do not make the callback when .DS_Store is changed. 
+						if (!path.includes(".DS_Store")) {
+							$window.executeInlineScript(callback.formname, callback.script, [path]);
+						}
+					}).on('unlink', function(path) {
+						$window.executeInlineScript(callback.forname, callback.script, [path]);
+					}).on('unlinkDir', function(path) {
+						$window.executeInlineScript(callback.formname, callback.script, [path]);
+					});
+				});
 			},
 			/**
 			 * Watches a give path, that should represent a file, for modifications.

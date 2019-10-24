@@ -18,6 +18,13 @@
 			],
 			"returns":"string[]"
 		},
+		"watchDir": {
+			"parameters" : [
+				{"name":"path", "type":"string"},
+				{"name":"callback", "type":"function"}
+			],
+			"async-now":true
+		},
 		"watchFile": {
 			"parameters" : [
 				{"name":"path", "type":"string"},
