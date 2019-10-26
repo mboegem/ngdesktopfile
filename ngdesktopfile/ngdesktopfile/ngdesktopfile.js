@@ -1,11 +1,12 @@
 angular.module('ngdesktopfile',['servoy'])
-.factory("ngdesktopfile",function($services, $q, $window,$utils) 
+.factory("ngdesktopfile",function($services, $q, $window,$utils, $log) 
 {
 	var fs = null;
 	var request = null;
 	var session = null;
 	var dialog = null;
 	var remote = null;
+	var watchers = new Map();
 	
 	if (typeof require == "function") {
 		fs = require('fs');
@@ -74,28 +75,68 @@ angular.module('ngdesktopfile',['servoy'])
 				})
 				return defer.promise;
 			},
+			/**
+			 * Watch a directory for changes at the given path. 
+			 * Please check the below used library here: https://github.com/paulmillr/chokidar
+			 * add, addDir, change, unlink, unlinkDir these are all events. 
+			 * add is for adding file
+			 * addDir is for adding folders
+			 * unlink is for deleting files
+			 * unlinkDir is for delete folders
+			 * change is for changing files
+			 * 
+			 */
 			watchDir: function(path, callback) {
-				// Initialize watcher
-				const watcher = chokidar.watch(path, {
-				  ignoreInitial: true,
-				  alwaysStat: true
-				});
-				waitForDefered(function() {
-					watcher.on('add', function(path, stats) {
-						$window.executeInlineScript(callback.formname, callback.script, [path]);
-					}).on('addDir', function(path, stats) {
-						$window.executeInlineScript(callback.formname, callback.script, [path]);
-					}).on('change', function(path, stats) {
-						// For MacOS: Do not make the callback when .DS_Store is changed. 
-						if (!path.includes(".DS_Store")) {
-							$window.executeInlineScript(callback.formname, callback.script, [path]);
-						}
-					}).on('unlink', function(path) {
-						$window.executeInlineScript(callback.forname, callback.script, [path]);
-					}).on('unlinkDir', function(path) {
-						$window.executeInlineScript(callback.formname, callback.script, [path]);
+				if (!watchers.get(path)) {
+					// Initialize watcher
+					const watcher = chokidar.watch(path, {
+					  ignoreInitial: true,
+					  alwaysStat: true
 					});
-				});
+					waitForDefered(function() {
+						watcher.on('add', function(path, stats) {
+							$log.debug('this is an add event\n', 'path: ' + path + '\n', stats)
+							$window.executeInlineScript(callback.formname, callback.script, [path]);
+						}).on('addDir', function(path, stats) {
+							$log.debug('this is an addDir event\n', 'path: ' + path + '\n', stats)
+							$window.executeInlineScript(callback.formname, callback.script, [path]);
+						}).on('change', function(path, stats) {
+							// For MacOS: Do not make the callback when .DS_Store is changed. 
+							// DS_Store is a file that stores custom attributes of its containing folder,
+							// such as the position of icons or the choice of a background image
+							if (!path.includes(".DS_Store")) {
+								$log.debug('this is a change file event\n', 'path: ' + path + '\n', stats)
+								$window.executeInlineScript(callback.formname, callback.script, [path]);
+							}
+						}).on('unlink', function(path) {
+							$log.debug('unlink (delete) event\n', 'path: ' + path)
+							$window.executeInlineScript(callback.forname, callback.script, [path]);
+						}).on('unlinkDir', function(path) {
+							$log.debug('unlinkDir (delete folder) event\n', 'path: ' + path);
+							$window.executeInlineScript(callback.formname, callback.script, [path]);
+						}).on('error', function(error) {
+							$log.error('Watcher error: ' + error);
+						});
+					});
+					// Save the watchers in a map so that they can be removed later if wanted. 
+					watchers.set(path, watcher);
+					$log.debug('A new watcher has been set for the following path: ' + path);
+				} else {
+					$log.debug('A watcher has already been set for this path: ' + path);
+				}
+			},
+			/**
+			 * Stop watching a directory found at the given path.
+			 */
+			unwatchDir: function(path) {
+				const watcher = watchers.get(path);
+				if (watcher) {
+					watcher.close();
+					watchers.delete(path);
+					$log.debug('The watcher at the following path has been removed: ' + path);
+				} else {
+					$log.debug('There is no watcher to be removed for the given path: ' + path);
+				}
 			},
 			/**
 			 * Watches a give path, that should represent a file, for modifications.

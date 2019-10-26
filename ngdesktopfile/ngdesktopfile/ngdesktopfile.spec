@@ -25,6 +25,12 @@
 			],
 			"async-now":true
 		},
+		"unwatchDir": {
+			"parameters" : [
+				{"name":"path", "type":"string"}
+			],
+			"async-now":true
+		},
 		"watchFile": {
 			"parameters" : [
 				{"name":"path", "type":"string"},
