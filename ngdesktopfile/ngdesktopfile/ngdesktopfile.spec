@@ -76,6 +76,32 @@
 				{"name":"callback", "type":"function"}
 			],
 			"async-now":true
+		 },
+		 "showSaveDialog": {
+			"parameters" : [
+				{"name":"callback", "type":"function"},
+				{"name":"options", "type":"object", "optional": true}
+			],
+			"async-now":true
+		 },
+		 "showSaveDialogSync": {
+			"parameters" : [
+				{"name":"options", "type":"object", "optional": true}
+			],
+		 	"returns": "string"
+		 },
+		 "showOpenDialog": {
+			"parameters" : [
+				{"name":"callback", "type":"function"},
+				{"name":"options", "type":"object", "optional": true}
+			],
+			"async-now":true
+		 },
+		 "showOpenDialogSync": {
+			"parameters" : [
+				{"name":"options", "type":"object", "optional": true}
+			], 
+			"returns": "string[]"
 		 }
 	},
  	"internalApi": {

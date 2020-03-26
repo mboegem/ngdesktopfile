@@ -291,6 +291,128 @@ angular.module('ngdesktopfile',['servoy'])
 					})
 				})
 			},
+			/**
+			 * Shows a file save dialog and calls the callback method with the file path
+			 * 
+			 * For the options object see https://www.electronjs.org/docs/api/dialog#dialogshowsavedialogbrowserwindow-options
+			 * 
+			 * @param {Function} callback
+			 * @param {{title: String=, defaultPath: String=, buttonLabel: String=, filters: Array<{name: String, extensions: Array<String>}>=}} [options]
+			 * 
+			 * Core options are
+			 * 
+			 * title: String the dialog title
+			 * defaultPath: String - absolute directory path, absolute file path, or file name to use by default.
+			 * buttonLabel: String - custom label for the confirmation button, when left empty the default label will be used.
+			 * filters: Array<{name: String, extensions: Array<String>}> - an array of file filters (e.g. [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }])
+			 */
+			showSaveDialog: function(callback, options) {
+				waitForDefered(function() {
+					if (!options) {
+						options = {};
+					}
+					dialog.showSaveDialog(remote.getCurrentWindow(), options)
+					.then(function(result) {
+						if (!result.canceled) {
+							$window.executeInlineScript(callback.formname, callback.script, [result.filePath])
+						} 
+					}).catch(function(err) {
+						console.log(err);
+					})
+				})
+			},
+			/**
+			 * Shows a file save dialog
+			 * 
+			 * To not block any process, showSaveDialog with a callback method is preferred over this method
+			 * 
+			 * For the options object see https://www.electronjs.org/docs/api/dialog#dialogshowsavedialogsyncbrowserwindow-options
+			 * 
+			 * @param {{title: String=, defaultPath: String=, buttonLabel: String=, filters: Array<{name: String, extensions: Array<String>}>=}} [options]
+			 * 
+			 * Core options are
+			 * 
+			 * title: String the dialog title
+			 * defaultPath: String - absolute directory path, absolute file path, or file name to use by default.
+			 * buttonLabel: String - custom label for the confirmation button, when left empty the default label will be used.
+			 * filters: Array<{name: String, extensions: Array<String>}> - an array of file filters (e.g. [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }])
+			 * 
+			 * @return {String}
+			 */
+			showSaveDialogSync: function(options) {
+				try {
+					return dialog.showSaveDialogSync(remote.getCurrentWindow(), options);
+				} catch(e) {
+					console.log(e);
+				}
+			},
+			/**
+			 * Shows a file open dialog and calls the callback with the selected file path(s)
+			 * 
+			 * For the options object see https://www.electronjs.org/docs/api/dialog#dialogshowopendialogbrowserwindow-options
+			 * 
+			 * Core options are
+			 * 
+			 * title: String the dialog title
+			 * defaultPath: String the default (starting) path
+			 * buttonLabel: String custom label for the confirmation button, when left empty the default label will be used.
+			 * filters: Array<{name: String, extensions: Array<String>}> an array of file filters (e.g. [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }])
+			 * properties: an Array of property keywords such as 
+			 * 	<code>openFile</code> - Allow files to be selected.
+			 * 	<code>openDirectory</code> - Allow directories to be selected.
+			 *  <code>multiSelections</code> - Allow multiple paths to be selected.
+			 * 
+			 * @param {Function} callback
+			 * @param {{title: String=, defaultPath: String=, buttonLabel: String=, filters: Array<{name: String, extensions: Array<String>}>=, properties: Array<String>}} [options] 
+			 */
+			showOpenDialog: function(callback, options) {
+				waitForDefered(function() {
+					if (!options) {
+						options = {};
+					}
+					dialog.showOpenDialog(remote.getCurrentWindow(), options)
+					.then(function(result) {
+						if (!result.canceled) {
+							$window.executeInlineScript(callback.formname, callback.script, [result.filePaths])
+						} 
+					}).catch(function(err) {
+						console.log(err);
+					})
+				})
+			},
+			/**
+			 * Shows a file open dialog and returns the selected file path(s)
+			 * 
+			 * To not block any process, showOpenDialog with a callback method is preferred over this method
+			 * 
+			 * For the options object see https://www.electronjs.org/docs/api/dialog#dialogshowopendialogsyncbrowserwindow-options
+			 * 
+			 * Core options are
+			 * 
+			 * title: String the dialog title
+			 * defaultPath: String the default (starting) path
+			 * buttonLabel: String custom label for the confirmation button, when left empty the default label will be used.
+			 * filters: Array<{name: String, extensions: Array<String>}> an array of file filters (e.g. [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }])
+			 * properties: an Array of property keywords such as 
+			 * 	<code>openFile</code> - Allow files to be selected.
+			 * 	<code>openDirectory</code> - Allow directories to be selected.
+			 *  <code>multiSelections</code> - Allow multiple paths to be selected.
+			 * 
+			 * @param {{title: String=, defaultPath: String=, buttonLabel: String=, filters: Array<{name: String, extensions: Array<String>}>=, properties: Array<String>}} [options]
+			 * @return <Array<String>}  
+			 */
+			showOpenDialogSync: function(callback, options) {
+				try {
+					return dialog.showOpenDialogSync(remote.getCurrentWindow(), options);
+				} catch(e) {
+					console.log(e);
+				}
+			},
+			/**
+			 * Deletes the given file, optionally calling the error callback when unsuccessful
+			 * @param {String} path
+			 * @param {Function} [errorCallback]
+			 */
 			deleteFile: function(path, errorCallback) {
 				waitForDefered(function() {
 					fs.unlink(path, function(err) {
@@ -350,6 +472,10 @@ angular.module('ngdesktopfile',['servoy'])
 			writeFileImpl: function(path, bytes){console.log("not in electron");},
 			readFileImpl: function(path, id, bytes){console.log("not in electron");},
 			selectDirectory: function(callback){console.log("not in electron");},
+			showSaveDialog: function(callback){console.log("not in electron");},
+			showSaveDialogSync: function(callback){console.log("not in electron");},
+			showOpenDialog: function(callback){console.log("not in electron");},
+			showOpenDialogSync: function(callback){console.log("not in electron");},
 			deleteFile: function(path, errorCallback){console.log("not in electron");}
 		}
 	}
