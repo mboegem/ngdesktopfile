@@ -470,6 +470,7 @@ angular.module('ngdesktopfile',['servoy'])
 			 * It returns true if the file has been successfully opened, otherwise it returns false.
 			 * 
 			 * @param path - file's full path
+			 * @return {boolean}
  			 */
 			openFile: function(path) {
 				try {
@@ -493,7 +494,8 @@ angular.module('ngdesktopfile',['servoy'])
 			showSaveDialogSync: function(callback){console.log("not in electron");},
 			showOpenDialog: function(callback){console.log("not in electron");},
 			showOpenDialogSync: function(callback){console.log("not in electron");},
-			deleteFile: function(path, errorCallback){console.log("not in electron");}
+			deleteFile: function(path, errorCallback){console.log("not in electron");},
+			openFile: function(path){console.log("not in electron");}
 		}
 	}
 })
