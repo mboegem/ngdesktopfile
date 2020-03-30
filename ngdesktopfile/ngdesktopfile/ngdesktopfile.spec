@@ -76,6 +76,12 @@
 				{"name":"callback", "type":"function"}
 			],
 			"async-now":true
+		 }, 
+		 "openFile": {
+		 	"parameters":[
+		 		{"name":"path", "type":"string"}
+		 	],
+		 	"returns": "boolean"
 		 }
 	},
  	"internalApi": {
