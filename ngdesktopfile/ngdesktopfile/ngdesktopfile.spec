@@ -102,6 +102,12 @@
 				{"name":"options", "type":"object", "optional": true}
 			], 
 			"returns": "string[]"
+		 }, 
+		 "openFile": {
+		 	"parameters":[
+		 		{"name":"path", "type":"string"}
+		 	],
+		 	"returns": "boolean"
 		 }
 	},
  	"internalApi": {

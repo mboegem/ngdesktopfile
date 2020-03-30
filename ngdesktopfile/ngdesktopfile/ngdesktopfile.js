@@ -7,12 +7,14 @@ angular.module('ngdesktopfile',['servoy'])
 	var dialog = null;
 	var remote = null;
 	var watchers = new Map();
+	var shell = null;
 	
 	if (typeof require == "function") {
 		fs = require('fs');
 		chokidar = require('chokidar');
 		request = require('request');
 		remote = require('electron').remote;
+		shell = require('electron').shell;
 		session = remote.session;
 		dialog = remote.dialog;
 		
@@ -76,17 +78,19 @@ angular.module('ngdesktopfile',['servoy'])
 				return defer.promise;
 			},
 			/**
-			 * Watch a directory for changes at the given path. 
-			 * Please check the below used library here: https://github.com/paulmillr/chokidar
-			 * add, addDir, change, unlink, unlinkDir these are all events. 
-			 * add is for adding file
-			 * addDir is for adding folders
-			 * unlink is for deleting files
-			 * unlinkDir is for delete folders
-			 * change is for changing files
+			 * Watches a directory for changes at the given path. 
 			 * 
+			 * @param path - directory's full path
+			 * @param callback - the callback method to be executed
 			 */
 			watchDir: function(path, callback) {
+				 /** Please check the below used library here: https://github.com/paulmillr/chokidar
+					 * add, addDir, change, unlink, unlinkDir these are all events. 
+					 * add is for adding file
+					 * addDir is for adding folders
+					 * unlink is for deleting files
+					 * unlinkDir is for delete folders
+					 * change is for changing files **/
 				if (!watchers.get(path)) {
 					// Initialize watcher
 					const watcher = chokidar.watch(path, {
@@ -458,6 +462,19 @@ angular.module('ngdesktopfile',['servoy'])
 					return retStats;
 				}
 				catch(err) {
+					console.log(err);
+				}
+			},
+			/**
+			 * Opens a file specified at the given path.
+			 * It returns true if the file has been successfully opened, otherwise it returns false.
+			 * 
+			 * @param path - file's full path
+ 			 */
+			openFile: function(path) {
+				try {
+					return shell.openItem(path);
+				} catch(err) {
 					console.log(err);
 				}
 			}
