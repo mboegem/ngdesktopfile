@@ -405,7 +405,7 @@ angular.module('ngdesktopfile',['servoy'])
 			 * @param {{title: String=, defaultPath: String=, buttonLabel: String=, filters: Array<{name: String, extensions: Array<String>}>=, properties: Array<String>}} [options]
 			 * @return <Array<String>}  
 			 */
-			showOpenDialogSync: function(callback, options) {
+			showOpenDialogSync: function(options) {
 				try {
 					return dialog.showOpenDialogSync(remote.getCurrentWindow(), options);
 				} catch(e) {
