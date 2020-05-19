@@ -619,24 +619,95 @@ angular.module('ngdesktopfile',['servoy'])
 				} finally {
 					return result;
 				}
+			},
+			/**
+			 * Writes text to the given path/filename
+			 * 
+			 * @param {String} path
+			 * @param {String} text_data
+			 * @param {String} [encoding] optional, default 'utf8'
+			 * 
+			 * @return {boolean}
+ 			 */
+			writeTXTFileSync: function(path, text_data, encoding) {
+				try {
+					var result = true;
+					
+					text_data = text_data || '';
+					var options = { encoding:'utf8' };
+					
+					if(encoding) {
+						options.encoding = encoding;
+					}
+					
+					if(path) {
+						fs.writeFileSync(path, text_data, options);
+					} else {
+						result = false;
+					}
+				} catch(err) {
+					result = false;
+					console.log(err);
+				} finally {
+					return result;
+				}
+			},
+			/**
+			 * Reads and returns the text of the given path/filename
+			 * 
+			 * @param {String} path
+			 * @param {String} [encoding] optional, default 'utf8'
+			 * 
+			 * @return {boolean}
+ 			 */
+			readTXTFileSync: function(path, encoding) {
+				try {
+					var result = null;
+					
+					var options = { encoding:'utf8' };
+					
+					if(encoding) {
+						options.encoding = encoding;
+					}
+					
+					if(path) {
+						result = fs.readFileSync(path, options);
+					}
+				} catch(err) {
+					console.log(err);
+				} finally {
+					return result;
+				}
 			}
 		}
 	}
 	else {
 		return {
 			homeDir: function() {console.log("not in electron");},
+			tmpDir: function() {console.log("not in electron");},
 			listDir: function(path) {console.log("not in electron");},
 			watchFile: function(path, callback) {console.log("not in electron");},
+			watchDir: function(path, callback) {console.log("not in electron");},
 			unwatchFile: function(path) {console.log("not in electron");},
+			unwatchDir: function(path) {console.log("not in electron");},
+			getFileStats: function(path) {console.log("not in electron");},
 			writeFileImpl: function(path, bytes){console.log("not in electron");},
 			readFileImpl: function(path, id, bytes){console.log("not in electron");},
 			selectDirectory: function(callback){console.log("not in electron");},
 			showSaveDialog: function(callback){console.log("not in electron");},
 			showSaveDialogSync: function(callback){console.log("not in electron");},
 			showOpenDialog: function(callback){console.log("not in electron");},
-			showOpenDialogSync: function(callback){console.log("not in electron");},
+			showOpenDialogSync: function(options){console.log("not in electron");},
 			deleteFile: function(path, errorCallback){console.log("not in electron");},
-			openFile: function(path){console.log("not in electron");}
+			openFile: function(path){console.log("not in electron");},
+			exists: function(path){console.log("not in electron");},
+			appendToTXTFile: function(path, text){console.log("not in electron");},
+			copyFile: function(src, dest){console.log("not in electron");},
+			createFolder: function(path){console.log("not in electron");},
+			deleteFolder: function(path){console.log("not in electron");},
+			renameFile: function(oldPath, newPath){console.log("not in electron");},
+			writeTXTFileSync: function(path, text_data){console.log("not in electron");},
+			readTXTFileSync: function(path){console.log("not in electron");}
 		}
 	}
 })

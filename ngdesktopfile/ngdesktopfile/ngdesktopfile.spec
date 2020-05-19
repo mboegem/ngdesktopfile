@@ -149,6 +149,21 @@
 		 		{"name":"newPath", "type":"string"}
 		 	],
 		 	"returns": "boolean"
+		 },
+		 "writeTXTFileSync": {
+		 	"parameters":[
+		 		{"name":"path", "type":"string"},
+		 		{"name":"text_data", "type":"string"},
+		 		{"name":"encoding", "type":"string"}
+		 	],
+		 	"returns": "boolean"
+		 },
+		 "readTXTFileSync": {
+		 	"parameters":[
+		 		{"name":"path", "type":"string"},
+		 		{"name":"encoding", "type":"string"}
+		 	],
+		 	"returns": "string"
 		 }
 	},
  	"internalApi": {
