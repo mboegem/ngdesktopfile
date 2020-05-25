@@ -108,6 +108,62 @@
 		 		{"name":"path", "type":"string"}
 		 	],
 		 	"returns": "boolean"
+		 },
+		 "exists": {
+		 	"parameters":[
+		 		{"name":"path", "type":"string"}
+		 	],
+		 	"returns": "boolean"
+		 },
+		 "appendToTXTFile": {
+		 	"parameters":[
+		 		{"name":"path", "type":"string"},
+		 		{"name":"text", "type":"string"},
+		 		{"name":"encoding", "type":"string"}
+		 	],
+		 	"returns": "boolean"
+		 },
+		 "copyFile": {
+		 	"parameters":[
+		 		{"name":"src", "type":"string"},
+		 		{"name":"dest", "type":"string"},
+		 		{"name":"overwriteDest", "type":"boolean"}
+		 	],
+		 	"returns": "boolean"
+		 },
+		 "createFolder": {
+		 	"parameters":[
+		 		{"name":"path", "type":"string"}
+		 	],
+		 	"returns": "boolean"
+		 },
+		 "deleteFolder": {
+		 	"parameters":[
+		 		{"name":"path", "type":"string"}
+		 	],
+		 	"returns": "boolean"
+		 },
+		 "renameFile": {
+		 	"parameters":[
+		 		{"name":"oldPath", "type":"string"},
+		 		{"name":"newPath", "type":"string"}
+		 	],
+		 	"returns": "boolean"
+		 },
+		 "writeTXTFileSync": {
+		 	"parameters":[
+		 		{"name":"path", "type":"string"},
+		 		{"name":"text_data", "type":"string"},
+		 		{"name":"encoding", "type":"string"}
+		 	],
+		 	"returns": "boolean"
+		 },
+		 "readTXTFileSync": {
+		 	"parameters":[
+		 		{"name":"path", "type":"string"},
+		 		{"name":"encoding", "type":"string"}
+		 	],
+		 	"returns": "string"
 		 }
 	},
  	"internalApi": {

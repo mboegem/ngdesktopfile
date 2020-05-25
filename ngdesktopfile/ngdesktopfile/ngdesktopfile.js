@@ -405,7 +405,7 @@ angular.module('ngdesktopfile',['servoy'])
 			 * @param {{title: String=, defaultPath: String=, buttonLabel: String=, filters: Array<{name: String, extensions: Array<String>}>=, properties: Array<String>}} [options]
 			 * @return <Array<String>}  
 			 */
-			showOpenDialogSync: function(callback, options) {
+			showOpenDialogSync: function(options) {
 				try {
 					return dialog.showOpenDialogSync(remote.getCurrentWindow(), options);
 				} catch(e) {
@@ -469,7 +469,7 @@ angular.module('ngdesktopfile',['servoy'])
 			 * Opens a file specified at the given path.
 			 * It returns true if the file has been successfully opened, otherwise it returns false.
 			 * 
-			 * @param path - file's full path
+			 * @param {String} path - file's full path
 			 * @return {boolean}
  			 */
 			openFile: function(path) {
@@ -478,24 +478,236 @@ angular.module('ngdesktopfile',['servoy'])
 				} catch(err) {
 					console.log(err);
 				}
+			},
+			/**
+			 * Test whether or not the given path exists by checking with the file system.
+			 * It returns true if the path exists, false otherwise.
+			 * 
+			 * @param {String} path - file's full path
+			 * @return {boolean}
+ 			 */
+			exists: function(path) {
+				try {
+					var result = false;
+					
+					if(path) {
+						result = fs.existsSync(path);
+					}
+					
+					return result;
+				} catch(err) {
+					console.log(err);
+				}
+			},
+			/**
+			 * Synchronously append data to a file, creating the file if it does not yet exist.
+			 * 
+			 * @param {String} path - file's full path
+			 * @param {String} text - text to be added
+			 * @param {String} [encoding] - default utf8
+			 * @return {boolean}
+ 			 */
+			appendToTXTFile: function(path, text, encoding) {
+				try {
+					encoding = encoding || null;
+					
+					var result = true;
+					
+					if(path && text) {
+						fs.appendFileSync(path, text, encoding);
+					} else {
+						result = false;
+					}
+				} catch(err) {
+					result = false;
+					console.log(err);
+				} finally {
+					return result;
+				}
+			},
+			/**
+			 * Synchronously copies src to dest. By default, dest is overwritten if it already exists.
+			 * 
+			 * @param {String} src - source filepath to copy
+			 * @param {String} dest - destination filepath of the copy operation
+			 * @param {Boolean} [overwriteDest] - default true
+			 * @return {boolean}
+ 			 */
+			copyFile: function(src, dest, overwriteDest) {
+				try {
+					var mode = (overwriteDest === false) ? 1 : 0; 
+					var result = true;
+					
+					if(src && dest) {
+						fs.copyFileSync(src, dest, mode);
+					} else {
+						result = false;
+					}
+				} catch(err) {
+					result = false;
+					console.log(err);
+				} finally {
+					return result;
+				}
+			},
+			/**
+			 * Synchronously creates a folder, including any necessary but nonexistent parent folders.
+			 * 
+			 * @param {String} path - folders full path
+			 * @return {boolean}
+ 			 */
+			createFolder: function(path) {
+				try {
+					var result = true;
+					
+					if(path) {
+						fs.mkdirSync(path, { recursive: true });
+						result = fs.existsSync(path);
+					} else {
+						result = false;
+					}
+				} catch(err) {
+					result = false;
+					console.log(err);
+				} finally {
+					return result;
+				}
+			},
+			/**
+			 * Synchronously deletes a folder, fails when folder is not empty
+			 * 
+			 * @param {String} path - folders full path
+			 * @return {boolean}
+ 			 */
+			deleteFolder: function(path) {
+				try {
+					var result = true;
+					
+					if(path) {
+						fs.rmdirSync(path);
+						result = !fs.existsSync(path);
+					} else {
+						result = false;
+					}
+				} catch(err) {
+					result = false;
+					console.log(err);
+				} finally {
+					return result;
+				}
+			},
+			/**
+			 * Synchronously rename file at oldPath to the pathname provided as newPath. In the case that newPath already exists, it will be overwritten.
+			 * 
+			 * @param {String} oldPath - old file full path
+			 * @param {String} newPath - new file full path
+			 * 
+			 * @return {boolean}
+ 			 */
+			renameFile: function(oldPath, newPath) {
+				try {
+					var result = true;
+					
+					if(oldPath && newPath) {
+						fs.renameSync(oldPath, newPath);
+					} else {
+						result = false;
+					}
+				} catch(err) {
+					result = false;
+					console.log(err);
+				} finally {
+					return result;
+				}
+			},
+			/**
+			 * Writes text to the given path/filename
+			 * 
+			 * @param {String} path
+			 * @param {String} text_data
+			 * @param {String} [encoding] optional, default 'utf8'
+			 * 
+			 * @return {boolean}
+ 			 */
+			writeTXTFileSync: function(path, text_data, encoding) {
+				try {
+					var result = true;
+					
+					text_data = text_data || '';
+					var options = { encoding:'utf8' };
+					
+					if(encoding) {
+						options.encoding = encoding;
+					}
+					
+					if(path) {
+						fs.writeFileSync(path, text_data, options);
+					} else {
+						result = false;
+					}
+				} catch(err) {
+					result = false;
+					console.log(err);
+				} finally {
+					return result;
+				}
+			},
+			/**
+			 * Reads and returns the text of the given path/filename
+			 * 
+			 * @param {String} path
+			 * @param {String} [encoding] optional, default 'utf8'
+			 * 
+			 * @return {boolean}
+ 			 */
+			readTXTFileSync: function(path, encoding) {
+				try {
+					var result = null;
+					
+					var options = { encoding:'utf8' };
+					
+					if(encoding) {
+						options.encoding = encoding;
+					}
+					
+					if(path) {
+						result = fs.readFileSync(path, options);
+					}
+				} catch(err) {
+					console.log(err);
+				} finally {
+					return result;
+				}
 			}
 		}
 	}
 	else {
 		return {
 			homeDir: function() {console.log("not in electron");},
+			tmpDir: function() {console.log("not in electron");},
 			listDir: function(path) {console.log("not in electron");},
 			watchFile: function(path, callback) {console.log("not in electron");},
+			watchDir: function(path, callback) {console.log("not in electron");},
 			unwatchFile: function(path) {console.log("not in electron");},
+			unwatchDir: function(path) {console.log("not in electron");},
+			getFileStats: function(path) {console.log("not in electron");},
 			writeFileImpl: function(path, bytes){console.log("not in electron");},
 			readFileImpl: function(path, id, bytes){console.log("not in electron");},
 			selectDirectory: function(callback){console.log("not in electron");},
 			showSaveDialog: function(callback){console.log("not in electron");},
 			showSaveDialogSync: function(callback){console.log("not in electron");},
 			showOpenDialog: function(callback){console.log("not in electron");},
-			showOpenDialogSync: function(callback){console.log("not in electron");},
+			showOpenDialogSync: function(options){console.log("not in electron");},
 			deleteFile: function(path, errorCallback){console.log("not in electron");},
-			openFile: function(path){console.log("not in electron");}
+			openFile: function(path){console.log("not in electron");},
+			exists: function(path){console.log("not in electron");},
+			appendToTXTFile: function(path, text){console.log("not in electron");},
+			copyFile: function(src, dest){console.log("not in electron");},
+			createFolder: function(path){console.log("not in electron");},
+			deleteFolder: function(path){console.log("not in electron");},
+			renameFile: function(oldPath, newPath){console.log("not in electron");},
+			writeTXTFileSync: function(path, text_data){console.log("not in electron");},
+			readTXTFileSync: function(path){console.log("not in electron");}
 		}
 	}
 })
