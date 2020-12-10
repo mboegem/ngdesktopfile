@@ -119,7 +119,7 @@
 		 	"parameters":[
 		 		{"name":"path", "type":"string"},
 		 		{"name":"text", "type":"string"},
-		 		{"name":"encoding", "type":"string"}
+		 		{"name":"encoding", "type":"string", "optional": true}
 		 	],
 		 	"returns": "boolean"
 		 },
@@ -127,7 +127,7 @@
 		 	"parameters":[
 		 		{"name":"src", "type":"string"},
 		 		{"name":"dest", "type":"string"},
-		 		{"name":"overwriteDest", "type":"boolean"}
+		 		{"name":"overwriteDest", "type":"boolean", "optional": true}
 		 	],
 		 	"returns": "boolean"
 		 },
@@ -154,14 +154,14 @@
 		 	"parameters":[
 		 		{"name":"path", "type":"string"},
 		 		{"name":"text_data", "type":"string"},
-		 		{"name":"encoding", "type":"string"}
+		 		{"name":"encoding", "type":"string", "optional": true}
 		 	],
 		 	"returns": "boolean"
 		 },
 		 "readTXTFileSync": {
 		 	"parameters":[
 		 		{"name":"path", "type":"string"},
-		 		{"name":"encoding", "type":"string"}
+		 		{"name":"encoding", "type":"string", "optional": true}
 		 	],
 		 	"returns": "string"
 		 }
