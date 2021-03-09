@@ -467,17 +467,14 @@ angular.module('ngdesktopfile',['servoy'])
 			},
 			/**
 			 * Opens a file specified at the given path.
-			 * It returns true if the file has been successfully opened, otherwise it returns false.
+			 * It returns a string value. 
+			 * If the value is empty, then the file has been successfully opened, otherwise the string contains the error message.
 			 * 
 			 * @param {String} path - file's full path
-			 * @return {boolean}
+			 * @return {String}
  			 */
-			openFile: function(path) {
-				try {
-					return shell.openItem(path);
-				} catch(err) {
-					console.log(err);
-				}
+			 openFile: function(path) {
+				return shell.openPath(path);
 			},
 			/**
 			 * Test whether or not the given path exists by checking with the file system.

@@ -107,7 +107,7 @@
 		 	"parameters":[
 		 		{"name":"path", "type":"string"}
 		 	],
-		 	"returns": "boolean"
+		 	"returns": "string"
 		 },
 		 "exists": {
 		 	"parameters":[
