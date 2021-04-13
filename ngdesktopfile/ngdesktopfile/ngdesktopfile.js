@@ -474,7 +474,9 @@ angular.module('ngdesktopfile',['servoy'])
 			 * @return {String}
  			 */
 			 openFile: function(path) {
-				return shell.openPath(path);
+				waitForDefered(function() {
+					return shell.openPath(path);
+				});
 			},
 			/**
 			 * Test whether or not the given path exists by checking with the file system.
