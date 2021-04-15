@@ -40,8 +40,8 @@ angular.module('ngdesktopfile',['servoy'])
 		var defer = null;
 		function waitForDefered(func) {
 			if (defer != null) {
-				defer.promise.then(function(){
-					func();
+				return defer.promise.then(function(){
+					return func();
 				})
 			}
 			else func();
@@ -474,7 +474,7 @@ angular.module('ngdesktopfile',['servoy'])
 			 * @return {String}
  			 */
 			 openFile: function(path) {
-				waitForDefered(function() {
+				return waitForDefered(function() {
 					return shell.openPath(path);
 				});
 			},
