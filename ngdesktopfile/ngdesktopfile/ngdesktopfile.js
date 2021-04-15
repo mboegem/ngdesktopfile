@@ -114,7 +114,7 @@ angular.module('ngdesktopfile',['servoy'])
 							}
 						}).on('unlink', function(path) {
 							$log.debug('unlink (delete) event\n', 'path: ' + path)
-							$window.executeInlineScript(callback.forname, callback.script, [path]);
+							$window.executeInlineScript(callback.formname, callback.script, [path]);
 						}).on('unlinkDir', function(path) {
 							$log.debug('unlinkDir (delete folder) event\n', 'path: ' + path);
 							$window.executeInlineScript(callback.formname, callback.script, [path]);
