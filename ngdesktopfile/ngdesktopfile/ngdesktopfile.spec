@@ -4,6 +4,10 @@
 	"version": 1,
  	"definition": "ngdesktopfile/ngdesktopfile/ngdesktopfile.js",
 	"serverscript":"ngdesktopfile/ngdesktopfile/ngdesktopfile_server.js",
+	"ng2Config": {
+	   "packageName": "@servoy/ngdesktopfile",
+	   "serviceName": "NGDesktopFileService"
+	},
  	"api":
  	{
 	   	"homeDir": {
