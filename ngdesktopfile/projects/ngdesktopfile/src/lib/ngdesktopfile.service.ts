@@ -628,7 +628,7 @@ export class NGDesktopFileService {
      *
      * @return
      */
-    writeTXTFileSync(path: string, text_data: string, encoding: string) {
+    writeTXTFileSync(path: string, text_data: string, encoding: BufferEncoding) {
         let result = true;
         try {
 
@@ -659,7 +659,7 @@ export class NGDesktopFileService {
      *
      * @return
      */
-    readTXTFileSync(path: string, encoding: string) {
+    readTXTFileSync(path: string, encoding: BufferEncoding) {
         let result = null;
         try {
 
