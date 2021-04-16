@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod",
+    "build_debug": "ng build --watch",
     "make_release": "node scripts/build.js",
     "fix_lib": "node scripts/fixPrepublish.js",
     "test": "ng test",
