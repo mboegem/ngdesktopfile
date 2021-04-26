@@ -6,7 +6,8 @@
 	"serverscript":"ngdesktopfile/ngdesktopfile/ngdesktopfile_server.js",
 	"ng2Config": {
 	   "packageName": "@servoy/ngdesktopfile",
-	   "serviceName": "NGDesktopFileService"
+	   "serviceName": "NGDesktopFileService",
+	   "entryPoint": "dist/servoy/ngdesktopfile"
 	},
  	"api":
  	{
