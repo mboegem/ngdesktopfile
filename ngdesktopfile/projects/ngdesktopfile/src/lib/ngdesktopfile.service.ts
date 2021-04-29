@@ -43,7 +43,7 @@ export class NGDesktopFileService {
             this.session.defaultSession.cookies.get({ url: this.remote.getCurrentWebContents().getURL() })
                 .then((cookies) => {
                     cookies.forEach((cookie) => {
-                        var ck = this.request.cookie(cookie.name + '=' + cookie.value);
+                        const ck = this.request.cookie(cookie.name + '=' + cookie.value);
                         j.setCookie(ck, document.baseURI);
                     });
                 }).catch((error) => {
