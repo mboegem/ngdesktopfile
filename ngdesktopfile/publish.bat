@@ -1,0 +1,1 @@
+npm publish dist\servoy\ngdesktopfile --access public --tag %1

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { LoggerFactory, LoggerService, Deferred, WindowRefService, ServoyPublicService } from '@servoy/public';
 
 
-import * as fs from 'node:fs';
-import * as os from 'node:os';
+import * as fs from 'fs';
+import * as os from 'os';
 import * as electron from 'electron';
 import * as chokidar from 'chokidar';
 
