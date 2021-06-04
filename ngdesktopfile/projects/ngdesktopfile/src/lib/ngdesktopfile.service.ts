@@ -8,9 +8,7 @@ import * as electron from 'electron';
 import * as chokidar from 'chokidar';
 
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class NGDesktopFileService {
 
     private defer: Deferred<any>;
