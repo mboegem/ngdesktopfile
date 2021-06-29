@@ -40,8 +40,8 @@ angular.module('ngdesktopfile',['servoy'])
 		var defer = null;
 		function waitForDefered(func) {
 			if (defer != null) {
-				defer.promise.then(function(){
-					func();
+				return defer.promise.then(function(){
+					return func();
 				})
 			}
 			else func();
@@ -114,7 +114,7 @@ angular.module('ngdesktopfile',['servoy'])
 							}
 						}).on('unlink', function(path) {
 							$log.debug('unlink (delete) event\n', 'path: ' + path)
-							$window.executeInlineScript(callback.forname, callback.script, [path]);
+							$window.executeInlineScript(callback.formname, callback.script, [path]);
 						}).on('unlinkDir', function(path) {
 							$log.debug('unlinkDir (delete folder) event\n', 'path: ' + path);
 							$window.executeInlineScript(callback.formname, callback.script, [path]);
@@ -467,17 +467,16 @@ angular.module('ngdesktopfile',['servoy'])
 			},
 			/**
 			 * Opens a file specified at the given path.
-			 * It returns true if the file has been successfully opened, otherwise it returns false.
+			 * It returns a string value. 
+			 * If the value is empty, then the file has been successfully opened, otherwise the string contains the error message.
 			 * 
 			 * @param {String} path - file's full path
-			 * @return {boolean}
+			 * @return {String}
  			 */
-			openFile: function(path) {
-				try {
-					return shell.openItem(path);
-				} catch(err) {
-					console.log(err);
-				}
+			 openFile: function(path) {
+				return waitForDefered(function() {
+					return shell.openPath(path);
+				});
 			},
 			/**
 			 * Test whether or not the given path exists by checking with the file system.
